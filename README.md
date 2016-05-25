@@ -42,4 +42,4 @@ Note: Failure to create all created queues will crash the application.
 Acknowledgements
 ----------------
 
-* Many thanks to Marcelo Gornstein for his NAME (Asterisk manager interface client for nodejs) without whom this wouldn't be possible
+* Many thanks to Marcelo Gornstein for his [NAMI](http://marcelog.github.com/Nami) (Asterisk manager interface client for nodejs) without whom this wouldn't be possible
