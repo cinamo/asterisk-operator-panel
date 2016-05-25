@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="raopApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Asterisk Operator Panel</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="bower_components/html5shiv/dist/html5shiv.min.js"></script>
+      <script src="bower_components/respond/dest/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body ng-controller="RaopCtrl">
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">RedAnt Asterisk operator panel</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div id="extensions" class="col-md-8">
+          <table class="table">
+            <thead>
+              <td width='150px'>User</td><td>Calls</td><td width='100px'>Time</td>
+            </thead>
+            <tbody>
+              <tr ng-repeat='ext in extensions' id='ext{{ext.ext}}'>
+                <td class='extension'>
+                  <a class='btn btn-sm btn-block {{ext | statusClass:this.calls}}' ng-click='toggleExt(ext.ext)'><i class='fa {{ext | statusIcon:this.calls}} fa-fw'></i>
+                    {{ext.ext}} {{ext.name}}
+                  </a>
+                </td>
+                <td class='calls'>
+                  <span class='{{call | callClass}}' ng-repeat="call in calls | filter:{ext:ext.ext}">
+                    <i ng-if="call.ringing" class='fa fa-fw fa-phone pulse'></i>
+                    <i ng-if="!call.ringing && call.outgoing" class='glyphicon glyphicon-log-out'></i>
+                    <i ng-if="!call.ringing && !call.outgoing" class='glyphicon glyphicon-log-in'></i>
+                    <strong>{{call.name}}</strong> {{call.number}}<br />
+                  </span>
+                </td>
+                <td class='time'>
+                  <span class='{{call | callClass}} timer' ng-repeat="call in calls | filter:{ext:ext.ext}" data-ts="{{call.duration}}">{{call.duration | secondsInHhmmss}}<br /></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="queues" class="col-md-4" />
+          <div ng-repeat='queue in queues' id="queue{{queue.ext}}" class="queue panel panel-default">
+            <div class="panel-heading">
+              {{queue.ext}} <strong>{{queue.name}}</strong>
+              <!--span class="badge pull-right">{{queue.calls.length}}</span-->
+              <span class="badge pull-right" ng-repeat="call in filtered = (calls | filter:{ext:queue.ext})">{{filtered.length}}</span>
+            </div>
+
+            <div class="panel-body">
+              <span ng-repeat='ext in queue.members | orderBy:"ext"'>
+                <a class="queue-member label label-primary" href="#" ng-click='removeQueueMember(ext.ext, queue.ext)'>{{ext.name}}</a> 
+              </span>
+
+              <a class='add-label label label-success' href='#' data-toggle="modal" data-target="#addQueueMember{{queue.ext}}Modal"><i class='fa fa-plus fa-fw'></i></a>
+
+              <div id="addQueueMember{{queue.ext}}Modal" class="modal fade">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                      <h4 class="modal-title">Add to queue {{queue.ext}} <strong>{{queue.name}}</strong></h4>
+                    </div>
+                    <div class="modal-body">
+                      <span class='modal-extensions' ng-repeat='ext in extensions'>
+                        <button type="button" class="btn btn-default btn-xs" ng-click='addQueueMember(ext.ext, queue.ext)' data-dismiss="modal">{{ext.ext}} {{ext.name}}</button>&nbsp;
+                      </span>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <table class='table'>
+              <tr ng-repeat="call in calls | filter:{ext:queue.ext}">
+                <td><i class='fa fa-phone fa-fw pulse'></i> <strong>{{call.name}}</strong> {{call.number}}</td>
+                <td><span class='timer' data-ts='{{ call.duration }}'>{{ call.duration | secondsInHhmmss}}</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="first-ten-last-calls" class="col-md-6">
+        <table class='table table-striped'>
+          <thead>
+            <tr><th>Time</th><th>Caller</th><th>Extension</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="call in callLog.slice().reverse() | limitTo:5">
+              <td><i class='fa fa-clock-o fa-fw'></i>{{call.date | date:'HH:mm'}}</td>
+              <td>
+                <i ng-if="call.outgoing" class='glyphicon glyphicon-log-out'></i>
+                <i ng-if="!call.outgoing" class='glyphicon glyphicon-log-in'></i>
+                <strong>{{call.name}}</strong> {{call.number}}
+              </td>
+              <td>{{call.ext}} <strong>{{call.extname}}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="second-ten-last-calls" class="col-md-6">
+        <table class='table table-striped'>
+          <thead>
+            <tr><th>Time</th><th>Caller</th><th>Extension</th></tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="call in callLog.slice().reverse().slice(5) | limitTo:5">
+              <td><i class='fa fa-clock-o fa-fw'></i>{{call.date | date:'HH:mm'}}</td>
+              <td>
+                <i ng-if="call.outgoing" class='glyphicon glyphicon-log-out'></i>
+                <i ng-if="!call.outgoing" class='glyphicon glyphicon-log-in'></i>
+                <strong>{{call.name}}</strong> {{call.number}}
+              </td>
+              <td>{{call.ext}} <strong>{{call.extname}}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+<!-- SCRIPTS =============================================================================================== -->
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+
+    <script src="controller.js"></script>
+    <script src="filters.js"></script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "asterisk-operator-panel",
+  "version": "0.1.0",
+  "description": "RedAnt Asterisk operator panel",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.4.5",
+    "nami": "^0.6.4",
+    "socket.io": "^1.0.6"
+  },
+  "devDependencies": {},
+  "private": true,  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "postinstall": "bower install"
+  },
+  "author": "Gert Wijnalda <gert@redant.nl>",
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "asterisk-operator-panel",
+  "authors": [
+    "Gert Wijnalda <gert@redant.nl>"
+  ],
+  "description": "Web components for RedAnt Asterisk operator panel",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "https://redant.nl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.18",
+    "html5shiv": "~3.7.2",
+    "bootstrap": "~3.2.0",
+    "fontawesome": "~4.1.0",
+    "respond": "~1.4.2",
+    "jquery": "~2.1.1"
+  }
+}
