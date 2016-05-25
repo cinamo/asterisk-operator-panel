@@ -12,11 +12,11 @@ Initial Configuration
 
 Edit the `config.js` file and set the following parameters:
 
-`config.port` -- default port on which the web interface will listen
-`config.asterisk.host` -- Asterisk host name or IP
-`config.asterisk.port` -- Asterisk manager interface port (default: 5038)
-`config.asterisk.username` -- Asterisk manager interface username (default: admin)
-`config.asterisk.secret` -- Asterisk manager interface secret
+- `config.port` -- default port on which the web interface will listen
+- `config.asterisk.host` -- Asterisk host name or IP
+- `config.asterisk.port` -- Asterisk manager interface port (default: 5038)
+- `config.asterisk.username` -- Asterisk manager interface username (default: admin)
+- `config.asterisk.secret` -- Asterisk manager interface secret
 
 Then configure your queue names, like this:
 
