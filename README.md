@@ -20,6 +20,8 @@ Requirements
 
 You need to have the Asterisk Manager Interface (AMI) running. It is usually configured in `/etc/asterisk/manager.conf` and is for instance usually enabled by FreePBX.
 
+Install all dependencies using `npm install` - this will also run `bower install` to put all the Bower components in `public/bower_components`.
+
 Initial Configuration
 ---------------------
 
