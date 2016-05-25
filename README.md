@@ -37,7 +37,7 @@ Then configure your queue names, like this:
 
 `config.queues = { 4000: 'RedAnt', 4999: 'Prometech', 6000: 'Support' };`
 
-Note: Failure to create all created queues will crash the application.
+***Note: Failure to create all defined queues will crash the application!***
 
 Acknowledgements
 ----------------
